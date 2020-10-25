@@ -19,8 +19,10 @@
     "chalk": "^4.1.0",
     "clear": "^0.1.0",
     "clui": "^0.3.6",
+    "dotenv": "^8.2.0",
     "figlet": "^1.5.0",
     "inquirer": "^7.3.3",
+    "js-yaml": "^3.14.0",
     "yargs": "^13.2.4"
   },
   "homepage": "GITHUB REPO TO BE ADDED HERE",
