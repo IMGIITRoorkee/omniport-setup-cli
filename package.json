@@ -25,9 +25,9 @@
     "js-yaml": "^3.14.0",
     "yargs": "^13.2.4"
   },
-  "homepage": "GITHUB REPO TO BE ADDED HERE",
+  "homepage": "github.com/IMGIITRoorkee/omniport-setup-cli/blob/master/README.md",
   "repository": {
     "type": "git",
-    "url": "git+GITHUB REPOSITORY TO BE ADDED HERE"
+    "url": "github.com/IMGIITRoorkee/omniport-setup-cli"
   }
 }
