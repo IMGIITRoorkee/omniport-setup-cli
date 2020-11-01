@@ -7,6 +7,7 @@ const cp = require('child_process')
 const inquirer = require("inquirer")
 const D = require("./development.js")
 const P = require("./production.js")
+const start = require('./start.js')
 const log = console.log
 const arg = process.argv
 const options = yargs
@@ -46,7 +47,9 @@ else if(arg[2]=='setup'&& arg[3]==undefined){
     })
 }
 else if(arg[2]=='start' && arg[3]==undefined){
-  log('start')
+  start.Backend().then( (port) => {
+    start.Frontend(port)
+  })
 }
 else{
   cp.spawn('omniport', ['-h'], { stdio: 'inherit'})
