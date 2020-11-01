@@ -26,3 +26,17 @@ Setup Omniport Docker
 omniport start
 ```
 Start front-end and back-end servers.
+
+## Working Example
+Basic Commands
+![intro](photos/intro.png)
+Interactive Setup
+![interactive](photos/interactive.png)
+Questions Format
+![format](photos/ques.png)
+Omniport Start Command
+![start](photos/start.png)
+Backend Server
+![Back](photos/backend.png)
+Frontend Server
+![Front](photos/frontend.png)
