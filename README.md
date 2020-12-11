@@ -1,4 +1,4 @@
-<img src="readme-assets/site/wordmark.svg" height="98px" />
+<img src="https://raw.githubusercontent.com/IMGIITRoorkee/omniport-setup-cli/master/readme-assets/site/wordmark.svg" height="98px" />
 
 > The CLI of the one true portal for any and every educational institute
 
@@ -56,18 +56,18 @@ Start front-end and back-end servers.
 ## Working Example
 
 Basic Commands
-![intro](photos/intro.png)
+![intro](https://raw.githubusercontent.com/IMGIITRoorkee/omniport-setup-cli/master/photos/intro.png)
 Interactive Setup
-![interactive](photos/interactive.png)
+![interactive](https://raw.githubusercontent.com/IMGIITRoorkee/omniport-setup-cli/master/photos/interactive.png)
 Questions Format
-![format](photos/ques.png)
+![format](https://raw.githubusercontent.com/IMGIITRoorkee/omniport-setup-cli/master/photos/ques.png)
 Omniport Start Command
-![start](photos/start.png)
+![start](https://raw.githubusercontent.com/IMGIITRoorkee/omniport-setup-cli/master/photos/start.png)
 Backend Server
-![Back](photos/backend.png)
+![Back](https://raw.githubusercontent.com/IMGIITRoorkee/omniport-setup-cli/master/photos/backend.png)
 Frontend Server
-![Front](photos/frontend.png)
+![Front](https://raw.githubusercontent.com/IMGIITRoorkee/omniport-setup-cli/master/photos/frontend.png)
 
 ## Credits
 
-<img src="readme-assets/maintainers/wordmark.svg" height="64px" />
+<img src="https://raw.githubusercontent.com/IMGIITRoorkee/omniport-setup-cli/master/readme-assets/maintainers/wordmark.svg" height="64px" />
