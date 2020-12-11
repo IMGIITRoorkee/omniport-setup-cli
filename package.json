@@ -1,6 +1,6 @@
 {
-  "name": "omniport-cli",
-  "version": "1.0.0",
+  "name": "@imgiitr/omniport-setup-cli",
+  "version": "0.1.0",
   "description": "Setup Omniport in hassle-free manner",
   "main": "bin/index.js",
   "scripts": {
@@ -13,8 +13,8 @@
   "bin": {
     "omniport": "./bin/index.js"
   },
-  "author": "Gagan Sharma",
-  "license": "MIT",
+  "author": "IMG IIT Roorkee",
+  "license": "GPL-3.0",
   "dependencies": {
     "chalk": "^4.1.0",
     "clear": "^0.1.0",
@@ -25,9 +25,10 @@
     "js-yaml": "^3.14.0",
     "yargs": "^13.2.4"
   },
-  "homepage": "github.com/IMGIITRoorkee/omniport-setup-cli/blob/master/README.md",
+  "homepage": "http://github.com/IMGIITRoorkee/omniport-setup-cli/blob/master/README.md",
   "repository": {
     "type": "git",
     "url": "github.com/IMGIITRoorkee/omniport-setup-cli"
-  }
+  },
+  "devDependencies": {}
 }
