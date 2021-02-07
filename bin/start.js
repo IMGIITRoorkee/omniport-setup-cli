@@ -12,21 +12,33 @@ module.exports = {
                 message: 'Start Back-end Server?'
             }])
         if(backend.start){
+            let startBack = true
             let opt = {
                 shell: true, 
                 cwd: './omniport-docker/codebase/omniport-backend/', 
                 stdio: 'inherit',
             }
-            let backPort = 60000
-            let startBack = true
             
-            while(startBack && backPort<=60031){
-                try{
-                    var temp = cp.execSync('sudo lsof -i:'+backPort)
-                    backPort++
-                }
-                catch{
-                    startBack = false
+            let backPort = 60000
+            let port = await inquirer
+                    .prompt([{
+                        name: "num",
+                        type: "input",
+                        message: "Enter port number (try default values):",
+                    }])
+            if(port.num!=""){
+                backPort = port.num
+                startBack = false
+            }
+            else{
+                while(startBack && backPort<=60031){
+                    try{
+                        var temp = cp.execSync('sudo lsof -i:'+backPort)
+                        backPort++
+                    }
+                    catch{
+                        startBack = false
+                    }
                 }
             }
         
@@ -45,7 +57,22 @@ module.exports = {
                         message: "Do you want to make migrations?",
                     }])
                 if(migrate.migrateornot){
-                    cp.spawnSync('docker exec '+backPort+' bash -c \'python manage.py makemigrations; python manage.py migrate; exec bash\'', [],  opt)
+                    let appmigrate = await inquirer
+                    .prompt([{
+                        name: "appornot",
+                        type: "input",
+                        message: "Enter app name (run across full project):",
+                    }])
+                    if(appmigrate.appornot != ""){
+                        let appopt = {
+                            shell: true, 
+                            cwd: './omniport-docker/codebase/omniport-backend/omniport/apps/'+appmigrate.appornot+'/', 
+                            stdio: 'inherit',
+                        }
+                        cp.spawnSync('docker exec '+backPort+' bash -c \'python manage.py makemigrations; python manage.py migrate; exec bash\'', [],  appopt)
+                    }else{
+                        cp.spawnSync('docker exec '+backPort+' bash -c \'python manage.py makemigrations; python manage.py migrate; exec bash\'', [],  opt)
+                    }
                 }
                 let create = await inquirer
                     .prompt([{
@@ -54,8 +81,8 @@ module.exports = {
                         message: "Do you want to create django superuser?",
                     }])
                 if(create.user){
-                    log('Create Super-User using the command "python manage.py createsuperuser"')
-                    cp.spawnSync('docker exec -ti 60002 sh', [], opt)
+                    log('Create Super-User using the command "python manage.py createsuperuser" and exit using "exit"')
+                    cp.spawnSync('docker exec -ti '+backPort+' sh', [], opt)
                 }
                 return backPort
             }
@@ -65,7 +92,7 @@ module.exports = {
         }
     },
     
-    Frontend: async (port) => {
+    Frontend: async () => {
         let frontend = await inquirer
             .prompt([{
                 name: 'start',
@@ -73,17 +100,35 @@ module.exports = {
                 message: 'Start Front-end Server?'
             }])
         if(frontend.start){
-            if(port==-1){
-                log(chalk.keyword('red')('Unable to start front-end server.'))
-                return
-            }
+            
             let opt = {
                 shell: true, 
                 cwd: './omniport-docker/codebase/omniport-frontend/', 
                 stdio: 'inherit',
             }
-            cp.spawnSync('sudo yarn install', { shell: true, cwd: './omniport-docker/codebase/omniport-frontend/omniport', stdio: 'inherit'})
-            cp.spawnSync('sudo chmod -R 777 node_modules/', { shell: true, cwd: './omniport-docker/codebase/omniport-frontend/omniport', stdio: 'inherit'})
+
+            let package = await inquirer
+            .prompt([{
+                name: 'install',
+                type: 'confirm',
+                message: 'Install packages for frontend?'
+            }])
+            if(package.install){
+                cp.spawnSync('sudo yarn install', { shell: true, cwd: './omniport-docker/codebase/omniport-frontend/omniport', stdio: 'inherit'})
+                cp.spawnSync('sudo chmod -R 777 node_modules/', { shell: true, cwd: './omniport-docker/codebase/omniport-frontend/omniport', stdio: 'inherit'})
+            }
+            let backPort = await inquirer
+                    .prompt([{
+                        name: "num",
+                        type: "input",
+                        message: "Enter Backend Server port number :",
+                    }])
+            let port = backPort.num
+            if(port==-1){
+                log(chalk.keyword('red')('Unable to start front-end server.'))
+                return
+            }
+            
             log('Starting Front-end server in the adjacent tab.')
             cp.execSync('gnome-terminal --tab -- bash -c "./scripts/start/react.sh -d '+port+'; exec bash"', opt)
         }

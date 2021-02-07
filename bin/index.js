@@ -33,7 +33,7 @@ else if(arg[2]=='setup'&& arg[3]==undefined){
       {
         name: "choice",
         type: "list",
-        message: "Let\'s get you started with Omniport. Make sure you\n \u2022 Are in the folder where you want to clone/ have cloned Omniport-Docker Repository\n \u2022 Have Docker and Docker-Compose installed\n \u2022 Docker Daemon is running\n You can use Ctrl+C to exit anytime. Choose what fits you the best:",
+        message: "Let\'s get you started with Omniport. Make sure you\n \u2022 Are in the folder where you want to clone or have cloned Omniport-Docker Repository\n \u2022 Have Docker and Docker-Compose installed\n \u2022 Docker Daemon is running\n You can use Ctrl+C to exit anytime. Choose what fits you the best:",
         choices: ["Development Setup", "Production Setup"],
       },
     ])
