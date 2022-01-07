@@ -174,6 +174,16 @@ module.exports = {
                     .prompt([{
                         name: 'ifbuild',
                         type: 'confirm',
+                        message: 'Delete all omniport docker volumes?'
+                    }])
+                if(build.ifbuild){
+                    cp.execSync('docker-compose down', { cwd: './omniport-docker/',stdio: 'inherit'})
+                    cp.execSync('docker volume rm $(docker volume ls -q | grep "omniport-docker")')
+                }
+                build = await inquirer
+                    .prompt([{
+                        name: 'ifbuild',
+                        type: 'confirm',
                         message: 'Set up Omniport services?'
                     }])
                 if(build.ifbuild){
