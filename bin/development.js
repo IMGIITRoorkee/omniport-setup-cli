@@ -96,7 +96,6 @@ module.exports = {
                     }
                     cp.spawnSync('./scripts/build/rabbitmq.sh', [], opt)
                     let msgenv = dotenv.config({path: './omniport-docker/rabbitmq/message_broker.env'})
-                    doc.services['message-broker'].user = msgenv.parsed.RABBITMQ_DEFAULT_USER
                     fs.writeFileSync('./omniport-docker/docker-compose.yml', yaml.safeDump(doc), (err) => {
                         if (err) {
                             log(chalk.keyword('red')('Some error ocurred.'))
@@ -128,7 +127,6 @@ module.exports = {
                     }
                     cp.spawnSync('./scripts/build/postgres.sh', [], opt)
                     let dbenv = dotenv.config({path: './omniport-docker/postgres/database.env'})
-                    doc.services.database.user = dbenv.parsed.POSTGRES_USER
                     fs.writeFileSync('./omniport-docker/docker-compose.yml', yaml.safeDump(doc), (err) => {
                         if (err) {
                             log(chalk.keyword('red')('Some error ocurred.'))
