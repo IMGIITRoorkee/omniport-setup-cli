@@ -42,6 +42,11 @@ module.exports = {
             }
 
             if(!CloneError){
+                log('Checking certificates...')
+                let cert = await fs.existsSync('./omniport-docker/codebase/omniport-backend/certificates/firebase_service_account.json')
+                if(!cert){
+                    log(chalk.keyword('red')('Firebase certificate missing!','Add it in certificates directory'))
+                }
                 log('Building images for Omniport...')
                 let base
                 let build = await inquirer
@@ -187,12 +192,16 @@ module.exports = {
                         message: 'Set up Omniport services?'
                     }])
                 if(build.ifbuild){
-                    try{
-                        
-                        cp.execSync('./scripts/start/development.sh', { cwd: './omniport-docker/',stdio: 'inherit'})
-                        log(chalk.keyword('orange')('Congrats!'),'Omniport is all set and ready to roll.')
-                    }catch{
-                        log(chalk.keyword('red')('Omniport is not fully Setup.'))
+                    if(cert){
+                        try{
+                            cp.execSync('./scripts/start/development.sh', { cwd: './omniport-docker/',stdio: 'inherit'})
+                            log(chalk.keyword('orange')('Congrats!'),'Omniport is all set and ready to roll.')
+                        }catch{
+                            log(chalk.keyword('red')('Omniport is not fully Setup.'))
+                        }
+                    }
+                    else{
+                        log(chalk.keyword('red')('Firebase certificate missing!'))
                     }
                 }
                 log('Refer to official docs to learn more about Omniport. https://omniport.readthedocs.io/')
