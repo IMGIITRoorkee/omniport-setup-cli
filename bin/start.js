@@ -47,9 +47,10 @@ module.exports = {
                 return -1
             }
             else{
-                cp.execSync('gnome-terminal --tab -- bash -c "./scripts/start/django.sh -p '+backPort+'; exec bash"', opt)
+                cp.execSync('tmux ls| grep "backend" || tmux new-session -d -s backend "./scripts/start/django.sh -p '+backPort+'; exec bash"', opt)
+                log(chalk.keyword('red')('Wait till the backend server is up and running in background...'))
                 await sleep(10000)
-                log(chalk.keyword('red')('Wait till the backend server is up and running in the adjacent terminal tab.'))
+                log('Backend server running on port :',chalk.keyword('blue')(backPort))
                 let migrate = await inquirer
                     .prompt([{
                         name: "migrateornot",
@@ -129,8 +130,8 @@ module.exports = {
                 return
             }
             
-            log('Starting Front-end server in the adjacent tab.')
-            cp.execSync('gnome-terminal --tab -- bash -c "./scripts/start/react.sh -d '+port+'; exec bash"', opt)
+            log('Starting Front-end server in background...')
+            cp.execSync('tmux new-session -d -s frontend "./scripts/start/react.sh -d '+port+'; exec bash"', opt)
         }
     },
 }

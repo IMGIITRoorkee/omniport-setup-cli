@@ -51,6 +51,14 @@ else if(arg[2]=='start' && arg[3]==undefined){
     start.Frontend(port)
   })
 }
+else if(arg[2]=='backend' && arg[3]==undefined){
+  log('Press Ctrl+b d to exit the server')
+  cp.execSync('tmux attach-session -t backend',{ cwd: './omniport-docker/',stdio: 'inherit'})
+}
+else if(arg[2]=='frontend' && arg[3]==undefined){
+  log('Press Ctrl+b d to exit the server')
+  cp.execSync('tmux attach-session -t frontend',{ cwd: './omniport-docker/',stdio: 'inherit'})
+}
 else{
   cp.spawn('omniport', ['-h'], { stdio: 'inherit'})
 }
