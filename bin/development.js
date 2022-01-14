@@ -42,6 +42,8 @@ module.exports = {
             }
 
             if(!CloneError){
+                log('Installing tmux...')
+                cp.execSync('sudo apt-get install tmux', { cwd: './',stdio: 'inherit'})
                 log('Checking certificates...')
                 let cert = await fs.existsSync('./omniport-docker/codebase/omniport-backend/certificates/firebase_service_account.json')
                 if(!cert){
