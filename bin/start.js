@@ -128,9 +128,10 @@ module.exports = {
                 log(chalk.keyword('red')('Unable to start front-end server.'))
                 return
             }
-            
+            frontPort = +port + 1000
             log('Starting Front-end server in background...')
-            cp.execSync('tmux new-session -d -s frontend "./scripts/start/react.sh -d '+port+'; exec bash"', opt)
+            cp.execSync('tmux ls| grep "frontend" || tmux new-session -d -s frontend "./scripts/start/react.sh -d '+port+'; exec bash"', opt)
+            log('Frontend server running on port :',chalk.keyword('blue')(frontPort))
         }
     },
 }
