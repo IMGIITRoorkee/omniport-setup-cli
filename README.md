@@ -28,6 +28,7 @@ It's that simple!
 To install the cli navigate to the cloned repository and use the command
 ```
 npm install -g .
+npm install
 ```
 This installs the Omniport-CLI globally. You can use the following commands
 ```
