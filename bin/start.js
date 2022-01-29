@@ -82,8 +82,7 @@ module.exports = {
                         message: "Do you want to create django superuser?",
                     }])
                 if(create.user){
-                    log('Create Super-User using the command "python manage.py createsuperuser" and exit using "exit"')
-                    cp.spawnSync('docker exec -ti '+backPort+' sh', [], opt)
+                    cp.spawnSync('docker exec -ti '+backPort+' bash -c \' python manage.py createsuperuser;\'', [], opt)
                 }
                 return backPort
             }
