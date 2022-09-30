@@ -10,8 +10,8 @@ const backendSiteConfig = require('./backendSiteConfig.js')
 module.exports = {
     SetUp: async () => {
         let opt = {
-            shell: true, 
-            cwd: './omniport-docker/', 
+            shell: true,
+            cwd: './omniport-docker/',
             stdio: 'inherit',
         }
         let CloneError = true;
@@ -24,30 +24,31 @@ module.exports = {
                 }])
 
             CloneError = cloneYN.cloneornot;
-            if(CloneError){ 
-                try{
+            if (CloneError) {
+                try {
                     cp.execSync("git clone https://github.com/IMGIITRoorkee/omniport-docker.git")
-                    cp.spawnSync('./scripts/clone/everything.sh', [], opt)         
+                    cp.spawnSync('./scripts/clone/everything.sh', [], opt)
                     CloneError = false
-                }catch{
+                } catch {
                     log(chalk.keyword('red')('Check your Internet Connection or permissions of the folder'))
                 }
             }
-            
-            try{
-                cp.execSync('cd ./omniport-docker/')
-            }catch{
+
+            try {
+                const basepath = cp.execSync('find $HOME -type d -name "omniport-docker" | head -1').toString('utf8')
+                cp.execSync(`cd ${basepath}`)
+            } catch {
                 CloneError = true
                 log(chalk.keyword('red')('You need to first clone Omniport-Docker Repository'))
             }
 
-            if(!CloneError){
+            if (!CloneError) {
                 log('Installing tmux...')
-                cp.execSync('sudo apt-get install tmux', { cwd: './',stdio: 'inherit'})
+                cp.execSync('sudo apt-get install tmux', { cwd: './', stdio: 'inherit' })
                 log('Checking certificates...')
                 let cert = await fs.existsSync('./omniport-docker/codebase/omniport-backend/certificates/firebase_service_account.json')
-                if(!cert){
-                    log(chalk.keyword('red')('Firebase certificate missing!','Add it in certificates directory'))
+                if (!cert) {
+                    log(chalk.keyword('red')('Firebase certificate missing!', 'Add it in certificates directory'))
                 }
                 log('Building images for Omniport...')
                 let base
@@ -57,7 +58,7 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-django images?'
                     }])
-                if(build.ifbuild){
+                if (build.ifbuild) {
                     cp.spawnSync('./scripts/build/django.sh', [], opt)
                 }
                 build = await inquirer
@@ -66,7 +67,7 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-react images?'
                     }])
-                if(build.ifbuild){
+                if (build.ifbuild) {
                     cp.spawnSync('./scripts/build/react.sh', [], opt)
                 }
                 build = await inquirer
@@ -75,7 +76,7 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-nginx images?'
                     }])
-                if(build.ifbuild){
+                if (build.ifbuild) {
                     cp.spawnSync('./scripts/build/nginx.sh', [], opt)
                 }
                 build = await inquirer
@@ -84,7 +85,7 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-memchaced images?'
                     }])
-                if(build.ifbuild){
+                if (build.ifbuild) {
                     cp.spawnSync('./scripts/build/memcached.sh', [], opt)
                 }
                 build = await inquirer
@@ -93,16 +94,16 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-rabbitmq images?'
                     }])
-                if(build.ifbuild){
+                if (build.ifbuild) {
                     let doc = yaml.safeLoad(fs.readFileSync('./omniport-docker/docker-compose.yml'))
-                    if(fs.existsSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml')){
+                    if (fs.existsSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml')) {
                         base = yaml.safeLoad(fs.readFileSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml'))
                     }
-                    else{
+                    else {
                         base = yaml.safeLoad(fs.readFileSync('./omniport-docker/codebase/omniport-backend/configuration/base_stencil.yml'))
                     }
                     cp.spawnSync('./scripts/build/rabbitmq.sh', [], opt)
-                    let msgenv = dotenv.config({path: './omniport-docker/rabbitmq/message_broker.env'})
+                    let msgenv = dotenv.config({ path: './omniport-docker/rabbitmq/message_broker.env' })
                     fs.writeFileSync('./omniport-docker/docker-compose.yml', yaml.safeDump(doc), (err) => {
                         if (err) {
                             log(chalk.keyword('red')('Some error ocurred.'))
@@ -112,7 +113,7 @@ module.exports = {
                     base.services.messageBroker.port = 5672
                     base.services.messageBroker.password = msgenv.parsed.RABBITMQ_DEFAULT_PASS
                     base.services.messageBroker.user = msgenv.parsed.RABBITMQ_DEFAULT_USER
-                    fs.writeFileSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml', yaml.safeDump(base), (err)=>{
+                    fs.writeFileSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml', yaml.safeDump(base), (err) => {
                         if (err) {
                             log(chalk.keyword('red')('Some error ocurred.'))
                         }
@@ -124,16 +125,16 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-postgres images?'
                     }])
-                if(build.ifbuild){
+                if (build.ifbuild) {
                     let doc = yaml.safeLoad(fs.readFileSync('./omniport-docker/docker-compose.yml'))
-                    if(fs.existsSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml')){
+                    if (fs.existsSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml')) {
                         base = yaml.safeLoad(fs.readFileSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml'))
                     }
-                    else{
+                    else {
                         base = yaml.safeLoad(fs.readFileSync('./omniport-docker/codebase/omniport-backend/configuration/base_stencil.yml'))
                     }
                     cp.spawnSync('./scripts/build/postgres.sh', [], opt)
-                    let dbenv = dotenv.config({path: './omniport-docker/postgres/database.env'})
+                    let dbenv = dotenv.config({ path: './omniport-docker/postgres/database.env' })
                     fs.writeFileSync('./omniport-docker/docker-compose.yml', yaml.safeDump(doc), (err) => {
                         if (err) {
                             log(chalk.keyword('red')('Some error ocurred.'))
@@ -144,7 +145,7 @@ module.exports = {
                     base.services.database.password = dbenv.parsed.POSTGRES_PASSWORD
                     base.services.database.user = dbenv.parsed.POSTGRES_USER
                     base.services.database.name = dbenv.parsed.POSTGRES_DB
-                    fs.writeFileSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml', yaml.safeDump(base), (err)=>{
+                    fs.writeFileSync('./omniport-docker/codebase/omniport-backend/configuration/base.yml', yaml.safeDump(base), (err) => {
                         if (err) {
                             log(chalk.keyword('red')('Some error ocurred.'))
                         }
@@ -156,8 +157,8 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-Backend configuration file?'
                     }])
-                if(build.ifbuild){
-                    await backendConfig.buildBackendConfig()               
+                if (build.ifbuild) {
+                    await backendConfig.buildBackendConfig()
                 }
                 build = await inquirer
                     .prompt([{
@@ -165,8 +166,8 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-Backend site configuration file?'
                     }])
-                if(build.ifbuild){
-                   await backendSiteConfig.buildSiteBackendConfig()               
+                if (build.ifbuild) {
+                    await backendSiteConfig.buildSiteBackendConfig()
                 }
                 build = await inquirer
                     .prompt([{
@@ -174,7 +175,7 @@ module.exports = {
                         type: 'confirm',
                         message: 'Build Omniport-redis images?'
                     }])
-                if(build.ifbuild){
+                if (build.ifbuild) {
                     cp.spawnSync('./scripts/build/redis.sh', [], opt)
                 }
                 build = await inquirer
@@ -183,8 +184,8 @@ module.exports = {
                         type: 'confirm',
                         message: 'Delete all omniport docker volumes?'
                     }])
-                if(build.ifbuild){
-                    cp.execSync('docker-compose down', { cwd: './omniport-docker/',stdio: 'inherit'})
+                if (build.ifbuild) {
+                    cp.execSync('docker-compose down', { cwd: './omniport-docker/', stdio: 'inherit' })
                     cp.execSync('docker volume rm $(docker volume ls -q | grep "omniport-docker")')
                 }
                 build = await inquirer
@@ -193,16 +194,16 @@ module.exports = {
                         type: 'confirm',
                         message: 'Set up Omniport services?'
                     }])
-                if(build.ifbuild){
-                    if(cert){
-                        try{
-                            cp.execSync('./scripts/start/development.sh', { cwd: './omniport-docker/',stdio: 'inherit'})
-                            log(chalk.keyword('orange')('Congrats!'),'Omniport is all set and ready to roll.')
-                        }catch{
+                if (build.ifbuild) {
+                    if (cert) {
+                        try {
+                            cp.execSync('./scripts/start/development.sh', { cwd: './omniport-docker/', stdio: 'inherit' })
+                            log(chalk.keyword('orange')('Congrats!'), 'Omniport is all set and ready to roll.')
+                        } catch {
                             log(chalk.keyword('red')('Omniport is not fully Setup.'))
                         }
                     }
-                    else{
+                    else {
                         log(chalk.keyword('red')('Firebase certificate missing!'))
                     }
                 }

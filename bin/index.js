@@ -11,23 +11,25 @@ const start = require('./start.js')
 const log = console.log
 const arg = process.argv
 const options = yargs
-.usage('Usage: $0 <command> [options]')
-.command('start', 'Setup Omniport services and start the servers ')
-.command('setup', 'Setup Omniport Docker')
-.alias('h', 'help')
-.alias('v', 'version')
-.argv
+  .usage('Usage: $0 <command> [options]')
+  .command('start', 'Setup Omniport services and start the servers ')
+  .command('setup', 'Setup Omniport Docker')
+  .command('backend', 'View backend (django server)')
+  .command('backend', 'View frontend (react server)')
+  .alias('h', 'help')
+  .alias('v', 'version')
+  .argv
 
+basepath = cp.execSync('find $HOME -type d -name "omniport-docker" | head -1').toString('utf8').replace(/[\n\r]/g, '')
 log(
   chalk.keyword('blue').bold(
-    figlet.textSync('Omniport', { font:'Colossal', horizontalLayout: 'fitted' })
+    figlet.textSync('Omniport', { font: 'Colossal', horizontalLayout: 'fitted' })
   )
 )
-if(arg[2]==undefined){
+if (arg[2] == undefined) {
   log('Omniport is a portal for educational institutes, designed from the ground up to be extensible, customizable, performant and powerful. Omniport also comes with a powerful collection of apps and is simple enough for you to be able to write your own.\nSee \'omniport --help\' for using this tool.')
 }
-else if(arg[2]=='setup'&& arg[3]==undefined){
-  //log('setup') 
+else if (arg[2] == 'setup' && arg[3] == undefined) {
   inquirer
     .prompt([
       {
@@ -38,27 +40,33 @@ else if(arg[2]=='setup'&& arg[3]==undefined){
       },
     ])
     .then((answer) => {
-      if(answer.choice == "Development Setup"){
+      if (answer.choice == "Development Setup") {
         D.SetUp()
       }
-      else{
+      else {
         P.SetUp()
       }
     })
 }
-else if(arg[2]=='start' && arg[3]==undefined){
-  start.Backend().then( (port) => {
-    start.Frontend(port)
-  })
-}
-else if(arg[2]=='backend' && arg[3]==undefined){
-  log('Press Ctrl+b d to exit the server')
-  cp.execSync('tmux attach-session -t backend',{ cwd: './omniport-docker/',stdio: 'inherit'})
-}
-else if(arg[2]=='frontend' && arg[3]==undefined){
-  log('Press Ctrl+b d to exit the server')
-  cp.execSync('tmux attach-session -t frontend',{ cwd: './omniport-docker/',stdio: 'inherit'})
-}
-else{
-  cp.spawn('omniport', ['-h'], { stdio: 'inherit'})
-}
+else {
+  if (!basepath)
+    log(chalk.keyword('red')('Omniport is not fully setup!'),chalk.keyword('white')('Run "omniport setup"') )
+  else {
+    if (arg[2] == 'start' && arg[3] == undefined) {
+      start.Backend(basepath).then((port) => {
+        start.Frontend(port)
+      })
+    }
+    else if (arg[2] == 'backend' && arg[3] == undefined) {
+      log('Press Ctrl+b d to exit the server')
+      cp.execSync('tmux attach-session -t backend', { cwd: basepath, stdio: 'inherit' })
+    }
+    else if (arg[2] == 'frontend' && arg[3] == undefined) {
+      log('Press Ctrl+b d to exit the server')
+      cp.execSync('tmux attach-session -t frontend', { cwd: basepath, stdio: 'inherit' })
+    }
+    else {
+      cp.spawn('omniport', ['-h'], { stdio: 'inherit' })
+    }
+  }
+} 
