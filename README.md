@@ -28,6 +28,7 @@ It's that simple!
 To install the cli navigate to the cloned repository and use the command
 ```
 npm install -g .
+npm install
 ```
 This installs the Omniport-CLI globally. You can use the following commands
 ```
@@ -52,6 +53,16 @@ Setup Omniport Docker
 omniport start
 ```
 Start front-end and back-end servers.
+<br><br>
+```
+omniport backend
+```
+Attach back-end server
+<br><br>
+```
+omniport frontend
+```
+Attach front-end server.
 
 ## Working Example
 
